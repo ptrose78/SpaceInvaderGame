@@ -12,6 +12,7 @@ function Game() {
                                           { id: 3, position: { x: 150, y: 0}}])
     const [direction, setDirection] = useState('right');
 
+    
     useEffect(() => {
         // Set initial position of the Hero at the bottom and middle of the screen
         const windowHeight = window.innerHeight;
@@ -20,7 +21,17 @@ function Game() {
         const heroHeight = 50; // Adjust this based on your Hero's height
         const heroWidth = 50;
         setPositionHero({ x: (windowWidth - heroWidth) / 2, y: (windowHeight - 50)});
+        
+        // Set initial position of the Aliens
+        const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
+        setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
       }, []);
+
+    
+    //helper function
+    function roundDownToNearestHundred(number) {
+        return Math.floor(number / 100) * 100;
+    }
 
     const handleKeyDown = (e) => {
         switch (e.key) {
@@ -34,7 +45,7 @@ function Game() {
                 break;
             case ' ':   
                 setBullets((prevBullets) => [...prevBullets, 
-                    { id: Date.now(), position: {...positionHero, y: (positionHero.y - 25) }}]);
+                    { id: Date.now(), position: {...positionHero, y: (positionHero.y - 50) }}]);
                 break;
             default:
                 break; 
@@ -63,10 +74,9 @@ function Game() {
     
               // Adjust the position based on the current movement direction
               if (direction === 'right') {
-                console.log('hi')
-                newX += 25;
+                newX += 50;
               } else if (direction === 'left') {
-                newX -= 25;
+                newX -= 50;
               }
     
               return { ...alien, position: {x: newX, y: newY }};
@@ -74,7 +84,7 @@ function Game() {
     
             // Check if aliens hit the right edge
             const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
-            if (rightEdge > window.innerWidth - 70) {
+            if (rightEdge > window.innerWidth - 85) {
               // If hitting the right edge, change direction and move down
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('left'); 
@@ -106,45 +116,6 @@ function Game() {
           document.removeEventListener('keydown', handleKeyDown);
         };
       }, [positionHero]); // Empty dependency array to ensure the effect runs once when the component mounts
-
-    //GamePlay functions:
-    //Move Aliens
-    const moveAliens = (alien) => {
-        setAliens((aliens) => {
-          const updatedAliens = aliens.map((alien) => {
-            let newX = alien.position.x;
-            let newY = alien.y;
-  
-            // Adjust the position based on the current movement direction
-            if (direction === 'right') {
-              newX += 10;
-            } else if (direction === 'left') {
-              newX -= 10;
-            }
-  
-            return { ...alien, x: newX, y: newY };
-          });
-  
-          // Check if aliens hit the right edge
-          const rightEdge = Math.max(...updatedAliens.map((alien) => alien.x));
-          if (rightEdge > window.innerWidth - 50) {
-            // If hitting the right edge, change direction and move down
-            setDirection('down');
-            updatedAliens.forEach((alien) => (alien.y += 20));
-          }
-  
-          // Check if aliens hit the left edge
-          const leftEdge = Math.min(...updatedAliens.map((alien) => alien.x));
-          if (leftEdge < 0) {
-            // If hitting the left edge, change direction and move down
-            setDirection('down');
-            updatedAliens.forEach((alien) => (alien.y += 20));
-          }
-  
-          return updatedAliens;
-        });
-    }
-
 
     return (
         <div>       

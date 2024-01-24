@@ -8,7 +8,6 @@ function AlienList({aliens}) {
         {aliens.map((alien) => <Alien key={alien.id} position={alien.position} />)}
         </div>
     )
-
 }
 
 export default AlienList;
