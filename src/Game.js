@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Hero from './Hero.js';
 import Bullet from './Bullet.js';
+import AlienList from './AlienList.js';
 
 function Game() {
     // States to track the position of the game pieces
@@ -61,6 +62,7 @@ function Game() {
 
     return (
         <div>       
+            <AlienList></AlienList>
             <Hero positionHero={positionHero}></Hero>
             {bullets.map((bullet) => (
                 <Bullet key={bullet.id} position={bullet.position} />
