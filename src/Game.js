@@ -2,16 +2,34 @@ import React, { useEffect, useState } from 'react';
 import Hero from './Hero.js';
 import Bullet from './Bullet.js';
 import AlienList from './AlienList.js';
+import GameStatus from './GameStatus.js';
+
 
 function Game() {
     // States to track the position of the game pieces
     const [positionHero, setPositionHero] = useState({x: 0, y: 50});
     const [bullets, setBullets] = useState([]);
-    const [aliens, setAliens] = useState([{ id: 1,position: { x: 50, y: 0}},
-                                          { id: 2, position: { x: 100, y: 0}},
-                                          { id: 3, position: { x: 150, y: 0}}])
+    const [aliens, setAliens] = useState([]);
     const [direction, setDirection] = useState('right');
+    const [gameStatus, setGameStatus] = useState({status: 'playing', level: 1});
 
+    useEffect(() => {
+        if (gameStatus.level === 1) {
+            setAliens([{ id: 1,position: { x: 50, y: 0}},
+                       { id: 2, position: { x: 100, y: 0}},
+                       { id: 3, position: { x: 150, y: 0}}])
+        }
+        console.log(gameStatus.level)
+        if (gameStatus.level === 2) {
+            setAliens([{ id: 1, position: { x: 25, y: 50}},
+                       { id: 2, position: { x: 50, y: 0}},
+                       { id: 3, position: { x: 100, y: 0}},
+                       { id: 4, position: { x: 150, y: 0}},
+                       { id: 5, position: { x: 75, y: 50}},
+                       { id: 6, position: { x: 125, y: 50}},
+                       { id: 7, position: { x: 175, y: 50}}])
+        }
+    }, [gameStatus.level]);
     
     useEffect(() => {
         // Set initial position of the Hero at the bottom and middle of the screen
@@ -23,8 +41,8 @@ function Game() {
         setPositionHero({ x: (windowWidth - heroWidth) / 2, y: (windowHeight - 50)});
         
         // Set initial position of the Aliens
-        const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
-        setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
+         //const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
+         // setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
       }, []);
 
     
@@ -74,7 +92,7 @@ function Game() {
     
               // Adjust the position based on the current movement direction
               if (direction === 'right') {
-                newX += 50;
+                newX += 0;
               } else if (direction === 'left') {
                 newX -= 50;
               }   
@@ -121,8 +139,8 @@ function Game() {
                 if (
                   bullet.position.x < alien.position.x + 25 &&
                   bullet.position.x + 25 > alien.position.x &&
-                  bullet.position.y < alien.position.y + 25 &&
-                  bullet.position.y + 25 > alien.position.y
+                  bullet.position.y < alien.position.y + 60 &&
+                  bullet.position.y + 60 > alien.position.y
                 ) {
                   // Collision detected, handle it (e.g., remove bullet and alien)
                   handleCollision(bullet, alien);
@@ -131,20 +149,32 @@ function Game() {
             }); 
           };
         
-          const handleCollision = (bullet, alien) => {
+        const handleCollision = (bullet, alien) => {
             // Handle collision, e.g., remove bullet and alien
             setBullets((prevBullets) => prevBullets.filter((b) => b.id !== bullet.id));
             setAliens((prevAliens) => prevAliens.filter((a) => a.id !== alien.id));
-          };
-    
+        };
+
+        const checkWin = (aliens, gameStatus) => {
+            
+            if (aliens.length === 0){
+                if (gameStatus.level < 2) {
+                setGameStatus({status: 'playing', level: (gameStatus.level+1)});
+                } else {
+                setGameStatus({status: 'win', level: 1});
+                }
+            }
+        }
+
         const intervalId = setInterval(() => {
             moveAliens();
             moveBullets();
             checkCollisions(bullets, aliens);
+            checkWin(aliens, gameStatus)
           }, 700);  
     
         return () => clearInterval(intervalId);
-      }, [direction, bullets, aliens]);
+      }, [direction, gameStatus, bullets, aliens]);
 
     useEffect(() => {
         // Add a centralized keydown event listener for the entire game
@@ -156,8 +186,12 @@ function Game() {
         };
       }, [positionHero]); // Empty dependency array to ensure the effect runs once when the component mounts
 
+
+     
+
     return (
-        <div>       
+        <div>
+            <GameStatus gameStatus={gameStatus}></GameStatus>       
             <AlienList aliens={aliens}></AlienList>
             <Hero positionHero={positionHero}></Hero>
             {bullets.map((bullet) => (
