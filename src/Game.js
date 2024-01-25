@@ -7,11 +7,28 @@ function Game() {
     // States to track the position of the game pieces
     const [positionHero, setPositionHero] = useState({x: 0, y: 50});
     const [bullets, setBullets] = useState([]);
-    const [aliens, setAliens] = useState([{ id: 1,position: { x: 50, y: 0}},
-                                          { id: 2, position: { x: 100, y: 0}},
-                                          { id: 3, position: { x: 150, y: 0}}])
+    const [aliens, setAliens] = useState([]);
     const [direction, setDirection] = useState('right');
+    const [level, setLevel] = useState(1);
+    //const [status, setGameStatus = useState('play')];
 
+    useEffect(() => {
+        if (level === 1) {
+            setAliens([{ id: 1,position: { x: 50, y: 0}},
+                       { id: 2, position: { x: 100, y: 0}},
+                       { id: 3, position: { x: 150, y: 0}}])
+        }
+        console.log(level)
+        if (level === 2) {
+            setAliens([{ id: 1, position: { x: 25, y: 50}},
+                       { id: 2, position: { x: 50, y: 0}},
+                       { id: 3, position: { x: 100, y: 0}},
+                       { id: 4, position: { x: 150, y: 0}},
+                       { id: 5, position: { x: 75, y: 50}},
+                       { id: 6, position: { x: 125, y: 50}},
+                       { id: 7, position: { x: 175, y: 50}}])
+        }
+    }, []);
     
     useEffect(() => {
         // Set initial position of the Hero at the bottom and middle of the screen
@@ -23,8 +40,8 @@ function Game() {
         setPositionHero({ x: (windowWidth - heroWidth) / 2, y: (windowHeight - 50)});
         
         // Set initial position of the Aliens
-        const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
-        setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
+         //const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
+         // setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
       }, []);
 
     
@@ -74,7 +91,7 @@ function Game() {
     
               // Adjust the position based on the current movement direction
               if (direction === 'right') {
-                newX += 50;
+                newX += 0;
               } else if (direction === 'left') {
                 newX -= 50;
               }   
@@ -121,8 +138,8 @@ function Game() {
                 if (
                   bullet.position.x < alien.position.x + 25 &&
                   bullet.position.x + 25 > alien.position.x &&
-                  bullet.position.y < alien.position.y + 25 &&
-                  bullet.position.y + 25 > alien.position.y
+                  bullet.position.y < alien.position.y + 60 &&
+                  bullet.position.y + 60 > alien.position.y
                 ) {
                   // Collision detected, handle it (e.g., remove bullet and alien)
                   handleCollision(bullet, alien);
@@ -131,16 +148,17 @@ function Game() {
             }); 
           };
         
-          const handleCollision = (bullet, alien) => {
+        const handleCollision = (bullet, alien) => {
             // Handle collision, e.g., remove bullet and alien
             setBullets((prevBullets) => prevBullets.filter((b) => b.id !== bullet.id));
             setAliens((prevAliens) => prevAliens.filter((a) => a.id !== alien.id));
-          };
-    
+        };
+
         const intervalId = setInterval(() => {
             moveAliens();
             moveBullets();
             checkCollisions(bullets, aliens);
+            checkWin(aliens)
           }, 700);  
     
         return () => clearInterval(intervalId);
@@ -155,6 +173,9 @@ function Game() {
           document.removeEventListener('keydown', handleKeyDown);
         };
       }, [positionHero]); // Empty dependency array to ensure the effect runs once when the component mounts
+
+
+     
 
     return (
         <div>       
