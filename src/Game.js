@@ -63,7 +63,7 @@ function Game() {
         }, 1000);
     
         return () => clearInterval(intervalId);
-      }, []);
+       }, []);
 
     useEffect(() => {
         const moveAliens = () => { 
@@ -77,15 +77,14 @@ function Game() {
                 newX += 50;
               } else if (direction === 'left') {
                 newX -= 50;
-              }
-    
+              }   
+     
               return { ...alien, position: {x: newX, y: newY }};
             });
     
             // Check if aliens hit the right edge
             const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
             if (rightEdge > window.innerWidth - 85) {
-              // If hitting the right edge, change direction and move down
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('left'); 
             }
@@ -93,7 +92,6 @@ function Game() {
             // Check if aliens hit the left edge
             const leftEdge = Math.min(...updatedAliens.map((alien) => alien.position.x));
             if (leftEdge < 25) {
-              // If hitting the left edge, change direction and move down
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('right');
             }
@@ -101,12 +99,53 @@ function Game() {
             return updatedAliens;
           });
         };
+
+        const moveBullets = () => { 
+            setBullets((prevBullets) => {
+                const updatedBullets = prevBullets.map((bullet) => ({
+                    ...bullet,
+                    position: { ...bullet.position, y: bullet.position.y - 50 },
+                }));
+                return updatedBullets;
+            });    
+        };  
+
+        const checkCollisions = (bullets, aliens) => {
+            console.log('check')
+
+            bullets.forEach((bullet) => {
+
+              aliens.forEach((alien) => {
+                // Check if bullet and alien overlap
+                console.log('hi')
+                if (
+                  bullet.position.x < alien.position.x + 25 &&
+                  bullet.position.x + 25 > alien.position.x &&
+                  bullet.position.y < alien.position.y + 25 &&
+                  bullet.position.y + 25 > alien.position.y
+                ) {
+                  // Collision detected, handle it (e.g., remove bullet and alien)
+                  handleCollision(bullet, alien);
+                }
+              });
+            }); 
+          };
+        
+          const handleCollision = (bullet, alien) => {
+            // Handle collision, e.g., remove bullet and alien
+            setBullets((prevBullets) => prevBullets.filter((b) => b.id !== bullet.id));
+            setAliens((prevAliens) => prevAliens.filter((a) => a.id !== alien.id));
+          };
     
-        const intervalId = setInterval(moveAliens, 250);
+        const intervalId = setInterval(() => {
+            moveAliens();
+            moveBullets();
+            checkCollisions(bullets, aliens);
+          }, 700);  
     
         return () => clearInterval(intervalId);
-      }, [direction]);
-     
+      }, [direction, bullets, aliens]);
+
     useEffect(() => {
         // Add a centralized keydown event listener for the entire game
         document.addEventListener('keydown', handleKeyDown);
