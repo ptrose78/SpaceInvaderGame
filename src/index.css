@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.gameStatus {
+  position: absolute;
+  bottom: 2%;
+  left: 90%
+}
