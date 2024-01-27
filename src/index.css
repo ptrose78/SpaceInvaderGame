@@ -15,6 +15,13 @@ code {
 
 .gameStatus {
   position: absolute;
-  bottom: 2%;
+  bottom: 40px;
+  left: 90%;
+  font-size: 20px;
+}
+
+.resetButton {
+  position: absolute;
+  bottom: 5px;
   left: 90%
 }

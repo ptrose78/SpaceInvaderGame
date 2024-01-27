@@ -12,14 +12,17 @@ function Game() {
     const [aliens, setAliens] = useState([]);
     const [direction, setDirection] = useState('right');
     const [gameStatus, setGameStatus] = useState({status: 'playing', level: 1});
-    const [showGame, setShowGame] = useState(true);
     
-
+    
     useEffect(() => {
+
         if (gameStatus.level === 1) {
             setAliens([{ id: 1, position: { x: 50, y: 0}},
                        { id: 2, position: { x: 100, y: 0}},
-                       { id: 3, position: { x: 150, y: 0}}])
+                       { id: 3, position: { x: 150, y: 0}}]) 
+            
+            resetHero();
+            setDirection('right');
         }
         if (gameStatus.level === 2) {
             setAliens([{ id: 1, position: { x: 25, y: 50}},
@@ -29,30 +32,29 @@ function Game() {
                        { id: 5, position: { x: 75, y: 50}},
                        { id: 6, position: { x: 125, y: 50}},
                        { id: 7, position: { x: 175, y: 50}}])
+            
+            resetHero();
         }
-    }, [gameStatus]);
-    
-    useEffect(() => {
-        // Set initial position of the Hero at the bottom and middle of the screen
-        const windowHeight = window.innerHeight;
-        console.log(windowHeight)
-        const windowWidth = window.innerWidth;
-        const heroHeight = 50; // Adjust this based on your Hero's height
-        const heroWidth = 50;
-        setHero({ x: (windowWidth - heroWidth) / 2, y: (windowHeight - 50)});
-        
-        // Set initial position of the Aliens
-         //const initialAlienY = (windowHeight - 50) - roundDownToNearestHundred(windowHeight - 50);
-         // setAliens((prevAliens) => prevAliens.map((alien) => ({...alien, position:{ ...alien.position, y: initialAlienY }})));
-      }, []);
 
-    
-    //helper function
-    function roundDownToNearestHundred(number) {
-        return Math.floor(number / 100) * 100;
+         // Set initial position of the Hero at the bottom and middle of the screen
+         function resetHero() {
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+            const heroHeight = 50; // Adjust this based on your Hero's height
+            const heroWidth = 50;
+
+            setHero({ x: (windowWidth - heroWidth) / 2, y: (windowHeight - 50)});
+         }
+
+    }, [gameStatus]);
+
+    const handleReset = () => {
+        // Reset the game state to its initial values after reset button clicked
+        setGameStatus({status: 'playing', level: 1});
     }
 
     const handleKeyDown = (e) => {
+        e.preventDefault();
         switch (e.key) {
             case 'ArrowLeft':
                 // Handle left arrow key event for the Hero
@@ -72,19 +74,6 @@ function Game() {
       }; 
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-          setBullets((prevBullets) =>
-            prevBullets.map((bullet) => ({
-              ...bullet,
-              position: { ...bullet.position, y: bullet.position.y - 50 }, 
-            }))
-          );
-        }, 1000);
-    
-        return () => clearInterval(intervalId);
-       }, []);
-
-    useEffect(() => {
         const moveAliens = () => { 
           setAliens((prevAliens) => {
             const updatedAliens = prevAliens.map((alien) => {
@@ -93,17 +82,20 @@ function Game() {
     
               // Adjust the position based on the current movement direction
               if (direction === 'right') {
-                newX += 0;
+                newX += 50;
               } else if (direction === 'left') {
-                newX -= 50;
-              }     
-     
+                newX -= 50; 
+              } else if (direction === 'stop') {
+                console.log('stop')
+                newX += 0;
+              }  
+       
               return { ...alien, position: {x: newX, y: newY }};
             });
     
             // Check if aliens hit the right edge
             const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
-            if (rightEdge > window.innerWidth - 85) {
+            if (rightEdge > window.innerWidth - 95) {
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('left'); 
             }
@@ -167,20 +159,21 @@ function Game() {
             
             if (aliens.length === 0){
                 if (gameStatus.level < 2) {
-                setGameStatus({status: 'playing', level: (gameStatus.level+1)});
+                    setGameStatus({status: 'playing', level: (gameStatus.level+1)});
                 } else {
-                setGameStatus({status: 'win', level: 1});
+                    setGameStatus({status: 'win'});
+                    setDirection('stop');
                 }
             }
 
             aliens.forEach((alien) => {
                 // Check if alien and hero overlap
-                if (alien.position.x + 15 > hero.x && 
-                    alien.position.x < hero.x + 15 &&
-                    alien.position.y < hero.y + 15 &&
-                    alien.position.y + 15 > hero.y) {
-                        gameStatus.status = 'lost';
-                        setShowGame(!showGame);
+                if (alien.position.x + 35 > hero.x && 
+                    alien.position.x < hero.x + 35 &&
+                    alien.position.y < hero.y + 35 &&
+                    alien.position.y + 35 > hero.y) {
+                        setGameStatus({status: 'lost'});
+                        setDirection('stop');            
                 }
             })
         }
@@ -210,11 +203,11 @@ function Game() {
         <div>
             <GameStatus gameStatus={gameStatus}></GameStatus>       
             <AlienList aliens={aliens}></AlienList>
-            {showGame}
             <Hero hero={hero}></Hero>
             {bullets.map((bullet) => (
                 <Bullet key={bullet.id} position={bullet.position} />
                 ))}
+            <button className = 'resetButton' onClick={handleReset}>Reset Game</button>
         </div> 
     );
 } 
