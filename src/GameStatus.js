@@ -8,6 +8,6 @@ function GameStatus({gameStatus}) {
                 : `Level `  + `${gameStatus.level}`}
         </div>
     )
-}
+} 
 
 export default GameStatus;
