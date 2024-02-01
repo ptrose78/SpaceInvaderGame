@@ -62,6 +62,7 @@ function Game() {
     const handleReset = () => {
         // Reset the game state to its initial values after reset button clicked
         setGameStatus({status: 'playing', speed: 700, level: 1});
+        setExplosion(({status: false, position: { x: 0, y: 0}}))
     }
 
     const handleKeyDown = (e) => {
@@ -105,7 +106,7 @@ function Game() {
     
             // Check if aliens hit the right edge
             const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
-            if (rightEdge > window.innerWidth - 115) {
+            if (rightEdge > window.innerWidth - 125) {
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('left'); 
             }
@@ -188,6 +189,7 @@ function Game() {
                     alien.position.y < hero.y + 35 &&
                     alien.position.y + 35 > hero.y) {
                         setGameStatus({status: 'lost'});
+                        setExplosion({status: true, position: {x: hero.x, y: hero.y}});
                         setDirection('stop');            
                 }
             })
