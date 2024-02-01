@@ -1,37 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import Hero from './Hero.js';
 import Bullet from './Bullet.js';
+import Explosion from './Explosion.js';
 import AlienList from './AlienList.js';
 import GameStatus from './GameStatus.js';
 
 
 function Game() {
     // States to track the position of the game pieces
-    const [hero, setHero] = useState({x: 0, y: 50});
+    const [hero, setHero] = useState({x: 0, y: 50});   
     const [bullets, setBullets] = useState([]);
-    const [aliens, setAliens] = useState([]);
+    const [aliens, setAliens] = useState([]); 
+    const [explosion, setExplosion] = useState({status: false, position: { x: 0, y: 0}});
     const [direction, setDirection] = useState('right');
     const [gameStatus, setGameStatus] = useState({status: 'playing', level: 1});
-    
     
     useEffect(() => {
 
         if (gameStatus.level === 1) {
             setAliens([{ id: 1, position: { x: 50, y: 0}},
-                       { id: 2, position: { x: 100, y: 0}},
-                       { id: 3, position: { x: 150, y: 0}}]) 
+                       { id: 2, position: { x: 125, y: 0}}, 
+                       { id: 3, position: { x: 200, y: 0}}]) 
             
             resetHero();
             setDirection('right');
         }
         if (gameStatus.level === 2) {
             setAliens([{ id: 1, position: { x: 25, y: 50}},
-                       { id: 2, position: { x: 50, y: 0}},
-                       { id: 3, position: { x: 100, y: 0}},
-                       { id: 4, position: { x: 150, y: 0}},
-                       { id: 5, position: { x: 75, y: 50}},
-                       { id: 6, position: { x: 125, y: 50}},
-                       { id: 7, position: { x: 175, y: 50}}])
+                       { id: 2, position: { x: 85, y: 0}},
+                       { id: 3, position: { x: 145, y: 50}},
+                       { id: 4, position: { x: 205, y: 0}},
+                       { id: 5, position: { x: 265, y: 50}},
+                       { id: 6, position: { x: 325, y: 0}},
+                       { id: 7, position: { x: 385, y: 50}}])
             
             resetHero();
         }
@@ -86,7 +87,6 @@ function Game() {
               } else if (direction === 'left') {
                 newX -= 50; 
               } else if (direction === 'stop') {
-                console.log('stop')
                 newX += 0;
               }  
        
@@ -130,21 +130,26 @@ function Game() {
                     if (
                     bullet.position.x < alien.position.x + 25 &&
                     bullet.position.x + 25 > alien.position.x &&
-                    bullet.position.y < alien.position.y + 60 &&
+                    bullet.position.y < alien.position.y + 60 && 
                     bullet.position.y + 60 > alien.position.y
                      || bullet.position.y > window.innerHeight) {
                     // Collision detected, handle it (e.g., remove bullet and alien)
                     handleCollision(bullet, alien);
-                    }
-              });
-            }); 
-          };
-
+                    setExplosion({status: true, position: {x: alien.position.x, y: alien.position.y}});
+                    // Hide explosion after a brief delay
+                        setTimeout(() => {
+                            setExplosion(false);
+                        }, 100);
+                    }}
+                );
+            })
+        }
+    
         const handleCollision = (bullet, alien) => {
-            // Handle collision, e.g., remove bullet and alien
+            // Handle collision and remove bullet and alien
             setBullets((prevBullets) => prevBullets.filter((b) => b.id !== bullet.id));
             setAliens((prevAliens) => prevAliens.filter((a) => a.id !== alien.id));
-        };
+        }
 
         const checkBulletPosition = (bullets) => {
             //Remove bullet when it exits screen
@@ -203,10 +208,12 @@ function Game() {
         <div>
             <GameStatus gameStatus={gameStatus}></GameStatus>       
             <AlienList aliens={aliens}></AlienList>
-            <Hero hero={hero}></Hero>
+            <Hero hero={hero} ></Hero>
             {bullets.map((bullet) => (
                 <Bullet key={bullet.id} position={bullet.position} />
-                ))}
+                ))} 
+           
+            {explosion.status && <Explosion position={explosion.position} />}
             <button className = 'resetButton' onClick={handleReset}>Reset Game</button>
         </div> 
     );
