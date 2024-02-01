@@ -13,7 +13,7 @@ function Game() {
     const [aliens, setAliens] = useState([]); 
     const [explosion, setExplosion] = useState({status: false, position: { x: 0, y: 0}});
     const [direction, setDirection] = useState('right');
-    const [gameStatus, setGameStatus] = useState({status: 'playing', level: 1});
+    const [gameStatus, setGameStatus] = useState({status: 'playing', speed: 700, level: 1});
     
     useEffect(() => {
 
@@ -21,10 +21,10 @@ function Game() {
             setAliens([{ id: 1, position: { x: 50, y: 0}},
                        { id: 2, position: { x: 125, y: 0}}, 
                        { id: 3, position: { x: 200, y: 0}}]) 
-            
             resetHero();
             setDirection('right');
         }
+
         if (gameStatus.level === 2) {
             setAliens([{ id: 1, position: { x: 25, y: 50}},
                        { id: 2, position: { x: 85, y: 0}},
@@ -33,7 +33,17 @@ function Game() {
                        { id: 5, position: { x: 265, y: 50}},
                        { id: 6, position: { x: 325, y: 0}},
                        { id: 7, position: { x: 385, y: 50}}])
-            
+            resetHero();
+        }
+
+        if (gameStatus.level === 3) {
+            setAliens([{ id: 1, position: { x: 25, y: 50}},
+                       { id: 2, position: { x: 85, y: 0}},
+                       { id: 3, position: { x: 145, y: 50}},
+                       { id: 4, position: { x: 205, y: 0}},
+                       { id: 5, position: { x: 265, y: 50}},
+                       { id: 6, position: { x: 325, y: 0}},
+                       { id: 7, position: { x: 385, y: 50}}])
             resetHero();
         }
 
@@ -51,7 +61,7 @@ function Game() {
 
     const handleReset = () => {
         // Reset the game state to its initial values after reset button clicked
-        setGameStatus({status: 'playing', level: 1});
+        setGameStatus({status: 'playing', speed: 700, level: 1});
     }
 
     const handleKeyDown = (e) => {
@@ -95,14 +105,14 @@ function Game() {
     
             // Check if aliens hit the right edge
             const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
-            if (rightEdge > window.innerWidth - 95) {
+            if (rightEdge > window.innerWidth - 115) {
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('left'); 
             }
     
             // Check if aliens hit the left edge
             const leftEdge = Math.min(...updatedAliens.map((alien) => alien.position.x));
-            if (leftEdge < 25) {
+            if (leftEdge < 65) {
               updatedAliens.forEach((alien) => (alien.position.y += 50));
               setDirection('right');
             }
@@ -163,8 +173,8 @@ function Game() {
         const checkWin = (aliens, hero, gameStatus) => {
             
             if (aliens.length === 0){
-                if (gameStatus.level < 2) {
-                    setGameStatus({status: 'playing', level: (gameStatus.level+1)});
+                if (gameStatus.level < 3) {
+                    setGameStatus({status: 'playing', speed: (gameStatus.speed-200), level: (gameStatus.level+1)});
                 } else {
                     setGameStatus({status: 'win'});
                     setDirection('stop');
@@ -189,7 +199,7 @@ function Game() {
             checkCollisions(bullets, aliens, hero, gameStatus);
             checkBulletPosition(bullets);
             checkWin(aliens, hero, gameStatus);
-          }, 700);  
+          }, gameStatus.speed);  
     
         return () => clearInterval(intervalId);
       }, [direction, gameStatus, bullets, aliens]);
