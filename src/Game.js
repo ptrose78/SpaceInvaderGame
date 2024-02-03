@@ -13,7 +13,7 @@ function Game() {
     const [aliens, setAliens] = useState([]); 
     const [explosion, setExplosion] = useState({status: false, position: { x: 0, y: 0}});
     const [direction, setDirection] = useState('right');
-    const [gameStatus, setGameStatus] = useState({status: 'playing', speed: 700, level: 1});
+    const [gameStatus, setGameStatus] = useState({status: 'playing', speed: 500, level: 1});
     
     useEffect(() => {
 
@@ -34,6 +34,7 @@ function Game() {
                        { id: 6, position: { x: 325, y: 0}},
                        { id: 7, position: { x: 385, y: 50}}])
             resetHero();
+            setDirection('right');
         }
 
         if (gameStatus.level === 3) {
@@ -45,6 +46,7 @@ function Game() {
                        { id: 6, position: { x: 325, y: 0}},
                        { id: 7, position: { x: 385, y: 50}}])
             resetHero();
+            setDirection('right');
         }
 
          // Set initial position of the Hero at the bottom and middle of the screen
@@ -61,7 +63,7 @@ function Game() {
 
     const handleReset = () => {
         // Reset the game state to its initial values after reset button clicked
-        setGameStatus({status: 'playing', speed: 700, level: 1});
+        setGameStatus({status: 'playing', speed: 500, level: 1});
         setExplosion(({status: false, position: { x: 0, y: 0}}))
     }
 
@@ -175,7 +177,7 @@ function Game() {
             
             if (aliens.length === 0){
                 if (gameStatus.level < 3) {
-                    setGameStatus({status: 'playing', speed: (gameStatus.speed-200), level: (gameStatus.level+1)});
+                    setGameStatus({status: 'playing', speed: (gameStatus.speed-150), level: (gameStatus.level+1)});
                 } else {
                     setGameStatus({status: 'win'});
                     setDirection('stop');
