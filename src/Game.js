@@ -18,33 +18,33 @@ function Game() {
     useEffect(() => {
 
         if (gameStatus.level === 1) {
-            setAliens([{ id: 1, position: { x: 50, y: 0}},
-                       { id: 2, position: { x: 125, y: 0}}, 
-                       { id: 3, position: { x: 200, y: 0}}]) 
+            setAliens([{ id: 1, position: { x: 50, y: 0}, image: './assets/alien-01.jpg'},
+                       { id: 2, position: { x: 125, y: 0}, image: './assets/alien-01.jpg'},
+                       { id: 3, position: { x: 200, y: 0}, image: './assets/alien-01.jpg'}]) 
             resetHero();
             setDirection('right');
         }
 
         if (gameStatus.level === 2) {
-            setAliens([{ id: 1, position: { x: 25, y: 50}},
-                       { id: 2, position: { x: 85, y: 0}},
-                       { id: 3, position: { x: 145, y: 50}},
-                       { id: 4, position: { x: 205, y: 0}},
-                       { id: 5, position: { x: 265, y: 50}},
-                       { id: 6, position: { x: 325, y: 0}},
-                       { id: 7, position: { x: 385, y: 50}}])
+            setAliens([{ id: 1, position: { x: 25, y: 50}, image: './assets/alien-02.jpg'},
+                       { id: 2, position: { x: 85, y: 0}, image: './assets/alien-02.jpg'},
+                       { id: 3, position: { x: 145, y: 50}, image: './assets/alien-02.jpg'},
+                       { id: 4, position: { x: 205, y: 0}, image: './assets/alien-02.jpg'},
+                       { id: 5, position: { x: 265, y: 50}, image: './assets/alien-02.jpg'},
+                       { id: 6, position: { x: 325, y: 0}, image: './assets/alien-02.jpg'},
+                       { id: 7, position: { x: 385, y: 50}, image: './assets/alien-02.jpg'}])
             resetHero();
             setDirection('right');
         }
 
         if (gameStatus.level === 3) {
-            setAliens([{ id: 1, position: { x: 25, y: 50}},
-                       { id: 2, position: { x: 85, y: 0}},
-                       { id: 3, position: { x: 145, y: 50}},
-                       { id: 4, position: { x: 205, y: 0}},
-                       { id: 5, position: { x: 265, y: 50}},
-                       { id: 6, position: { x: 325, y: 0}},
-                       { id: 7, position: { x: 385, y: 50}}])
+            setAliens([{ id: 1, position: { x: 25, y: 50}, image: './assets/alien-03.jpg'},
+                       { id: 2, position: { x: 85, y: 0}, image: './assets/alien-03.jpg'},
+                       { id: 3, position: { x: 145, y: 50}, image: './assets/alien-03.jpg'},
+                       { id: 4, position: { x: 205, y: 0}, image: './assets/alien-03.jpg'},
+                       { id: 5, position: { x: 265, y: 50}, image: './assets/alien-03.jpg'},
+                       { id: 6, position: { x: 325, y: 0}, image: './assets/alien-03.jpg'},
+                       { id: 7, position: { x: 385, y: 50}, image: './assets/alien-03.jpg'}])
             resetHero();
             setDirection('right');
         }
