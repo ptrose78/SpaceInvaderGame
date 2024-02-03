@@ -5,7 +5,7 @@ function AlienList({aliens}) {
     
     return (
         <div>
-        {aliens.map((alien) => <Alien key={alien.id} position={alien.position} />)}
+        {aliens.map((alien) => <Alien key={alien.id} position={alien.position} image={alien.image} />)}
         </div>
     )
 }
