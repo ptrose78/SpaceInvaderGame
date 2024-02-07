@@ -7,7 +7,6 @@ import alien03 from "./assets/alien-03.jpg";
 function Alien({position, image}) {
 
     const getAlienImage = () => {
-        console.log('bye')
         if(`${image}` === "./assets/alien-01.jpg") {
             return alien01;
         } else if (`${image}` === "./assets/alien-02.jpg") {
