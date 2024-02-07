@@ -8,43 +8,42 @@ import GameStatus from './GameStatus.js';
 
 function Game() {
     // States to track the position of the game pieces
-    const [hero, setHero] = useState({x: 0, y: 50});   
+    const [hero, setHero] = useState({});   
     const [bullets, setBullets] = useState([]);
     const [aliens, setAliens] = useState([]); 
     const [explosion, setExplosion] = useState({status: false, position: { x: 0, y: 0}});
-    const [direction, setDirection] = useState('right');
-    const [gameStatus, setGameStatus] = useState({status: 'playing', speed: 500, level: 1});
+    const [direction, setDirection] = useState('stop');
+    const [gameStatus, setGameStatus] = useState({status: 'starting', speed: 500, level: 1 });
     
     useEffect(() => {
 
         if (gameStatus.level === 1) {
-            setAliens([{ id: 1, position: { x: 50, y: 0}, image: './assets/alien-01.jpg'},
-                       { id: 2, position: { x: 125, y: 0}, image: './assets/alien-01.jpg'},
-                       { id: 3, position: { x: 200, y: 0}, image: './assets/alien-01.jpg'}]) 
+            setAliens([{ id: 1, position: { x: 50, y: 85}, image: './assets/alien-01.jpg'},
+                       { id: 2, position: { x: 125, y: 85}, image: './assets/alien-01.jpg'},
+                       { id: 3, position: { x: 200, y: 85}, image: './assets/alien-01.jpg'}]) 
             resetHero();
-            setDirection('right');
         }
 
         if (gameStatus.level === 2) {
-            setAliens([{ id: 1, position: { x: 25, y: 50}, image: './assets/alien-02.jpg'},
-                       { id: 2, position: { x: 85, y: 0}, image: './assets/alien-02.jpg'},
-                       { id: 3, position: { x: 145, y: 50}, image: './assets/alien-02.jpg'},
-                       { id: 4, position: { x: 205, y: 0}, image: './assets/alien-02.jpg'},
-                       { id: 5, position: { x: 265, y: 50}, image: './assets/alien-02.jpg'},
-                       { id: 6, position: { x: 325, y: 0}, image: './assets/alien-02.jpg'},
-                       { id: 7, position: { x: 385, y: 50}, image: './assets/alien-02.jpg'}])
+            setAliens([{ id: 1, position: { x: 25, y: 135}, image: './assets/alien-02.jpg'},
+                       { id: 2, position: { x: 85, y: 85}, image: './assets/alien-02.jpg'},
+                       { id: 3, position: { x: 145, y: 135}, image: './assets/alien-02.jpg'},
+                       { id: 4, position: { x: 205, y: 85}, image: './assets/alien-02.jpg'},
+                       { id: 5, position: { x: 265, y: 135}, image: './assets/alien-02.jpg'},
+                       { id: 6, position: { x: 325, y: 85}, image: './assets/alien-02.jpg'},
+                       { id: 7, position: { x: 385, y: 135}, image: './assets/alien-02.jpg'}])
             resetHero();
             setDirection('right');
         }
 
         if (gameStatus.level === 3) {
-            setAliens([{ id: 1, position: { x: 25, y: 50}, image: './assets/alien-03.jpg'},
-                       { id: 2, position: { x: 85, y: 0}, image: './assets/alien-03.jpg'},
-                       { id: 3, position: { x: 145, y: 50}, image: './assets/alien-03.jpg'},
-                       { id: 4, position: { x: 205, y: 0}, image: './assets/alien-03.jpg'},
-                       { id: 5, position: { x: 265, y: 50}, image: './assets/alien-03.jpg'},
-                       { id: 6, position: { x: 325, y: 0}, image: './assets/alien-03.jpg'},
-                       { id: 7, position: { x: 385, y: 50}, image: './assets/alien-03.jpg'}])
+            setAliens([{ id: 1, position: { x: 25, y: 85}, image: './assets/alien-03.jpg'},
+                       { id: 2, position: { x: 85, y: 155}, image: './assets/alien-03.jpg'},
+                       { id: 3, position: { x: 145, y: 85}, image: './assets/alien-03.jpg'},
+                       { id: 4, position: { x: 205, y: 155}, image: './assets/alien-03.jpg'},
+                       { id: 5, position: { x: 265, y: 85}, image: './assets/alien-03.jpg'},
+                       { id: 6, position: { x: 325, y: 155}, image: './assets/alien-03.jpg'},
+                       { id: 7, position: { x: 385, y: 85}, image: './assets/alien-03.jpg'}])
             resetHero();
             setDirection('right');
         }
@@ -61,12 +60,12 @@ function Game() {
 
     }, [gameStatus]);
 
-    const handleReset = () => {
-        // Reset the game state to its initial values after reset button clicked
-        setGameStatus({status: 'playing', speed: 500, level: 1});
-        setExplosion(({status: false, position: { x: 0, y: 0}}))
-    }
-
+    const onUpdateStatus = () => {
+            setGameStatus({status: 'playing', speed: 500, level: 1});
+            setExplosion(({status: false, position: { x: 0, y: 0}}));
+            setDirection('right')
+    }       
+    
     const handleKeyDown = (e) => {
         e.preventDefault();
         switch (e.key) {
@@ -107,17 +106,19 @@ function Game() {
             });
     
             // Check if aliens hit the right edge
-            const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
-            if (rightEdge > window.innerWidth - 125) {
-              updatedAliens.forEach((alien) => (alien.position.y += 50));
-              setDirection('left'); 
-            }
-    
-            // Check if aliens hit the left edge
-            const leftEdge = Math.min(...updatedAliens.map((alien) => alien.position.x));
-            if (leftEdge < 65) {
-              updatedAliens.forEach((alien) => (alien.position.y += 50));
-              setDirection('right');
+            if (direction != 'stop') {
+                const rightEdge = Math.max(...updatedAliens.map((alien) => alien.position.x));
+                if (rightEdge > window.innerWidth - 125) {
+                    updatedAliens.forEach((alien) => (alien.position.y += 50));
+                    setDirection('left'); 
+                }
+        
+                // Check if aliens hit the left edge
+                const leftEdge = Math.min(...updatedAliens.map((alien) => alien.position.x));
+                if (leftEdge < 65) {
+                    updatedAliens.forEach((alien) => (alien.position.y += 50));
+                    setDirection('right');
+                }
             }
     
             return updatedAliens;
@@ -179,7 +180,7 @@ function Game() {
                 if (gameStatus.level < 3) {
                     setGameStatus({status: 'playing', speed: (gameStatus.speed-150), level: (gameStatus.level+1)});
                 } else {
-                    setGameStatus({status: 'win'});
+                    setGameStatus({status: 'winning'});
                     setDirection('stop');
                 }
             }
@@ -190,7 +191,7 @@ function Game() {
                     alien.position.x < hero.x + 35 &&
                     alien.position.y < hero.y + 35 &&
                     alien.position.y + 35 > hero.y) {
-                        setGameStatus({status: 'lost'});
+                        setGameStatus({status: 'losing'});
                         setExplosion({status: true, position: {x: hero.x, y: hero.y}});
                         setDirection('stop');            
                 }
@@ -220,7 +221,7 @@ function Game() {
 
     return (
         <div>
-            <GameStatus gameStatus={gameStatus}></GameStatus>       
+            <GameStatus gameStatus={gameStatus} onUpdateStatus={onUpdateStatus}></GameStatus>       
             <AlienList aliens={aliens}></AlienList>
             <Hero hero={hero} ></Hero>
             {bullets.map((bullet) => (
@@ -228,7 +229,6 @@ function Game() {
                 ))} 
            
             {explosion.status && <Explosion position={explosion.position} />}
-            <button className = 'resetButton' onClick={handleReset}>Reset Game</button>
         </div> 
     );
 } 

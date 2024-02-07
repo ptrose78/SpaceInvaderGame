@@ -14,16 +14,77 @@ code {
     monospace;
 }
 
-
-.gameStatus {
-  position: absolute;
-  bottom: 40px;
-  left: 90%;
-  font-size: 20px;
+h2 {
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 2px;
+  margin-top: 10px;
 }
 
-.resetButton {
-  position: absolute;
-  bottom: 5px;
-  left: 90%
+p {
+  font-size: 20px;
+  color: #ccc; 
+  margin-bottom: 10px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 5px 0px;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.start {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(116, 31, 226);
+  padding: 10px;
+  border-radius: 25px;
+} 
+
+.start button {
+  margin-top: 10px;
+}
+
+.play {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}
+
+.play p {
+  text-align: center;
+}
+
+.result {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(116, 31, 226);
+  padding: 15px;
+  border-radius: 25px;
+}
+
+.result p {
+  text-align: center;
+}
+
+.level {
+  margin-bottom: 2px;
+  margin-top: 2px;
+  font-size: 20px;
 }
