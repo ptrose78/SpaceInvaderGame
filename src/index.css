@@ -88,3 +88,7 @@ button:hover {
   margin-top: 2px;
   font-size: 20px;
 }
+
+.points {
+  margin: 2px 0px;
+}
