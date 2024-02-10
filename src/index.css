@@ -46,8 +46,8 @@ button:hover {
 }
 
 .start {
-  position: relative;
-  top: 50%;
+  position: absolute;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(116, 31, 226);
@@ -71,7 +71,7 @@ button:hover {
 
 .result {
   position: relative;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(116, 31, 226);
