@@ -1,8 +1,7 @@
 import React from "react";
 
-function GameStatus({gameStatus, onUpdateStatus}) {
+function GameStatus({gameStatus, onUpdateStatus, points}) {
 
-    
     const start = 
         <div className={gameStatus.status === 'starting' ? 'start' : ''}>
             {gameStatus.status === 'starting' ?
@@ -23,6 +22,7 @@ function GameStatus({gameStatus, onUpdateStatus}) {
             {gameStatus.status === 'playing' && (
                 <>
                 <p className="level">LEVEL {gameStatus.level}</p>
+                <p className="points">POINTS {points}</p>
                 <button onClick={onUpdateStatus}>RESET GAME</button>
                 </>
             )} 
