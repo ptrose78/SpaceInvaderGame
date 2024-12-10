@@ -78,8 +78,8 @@ Make sure you have the following installed on your system:
 
 ## Game Controls
 
--Arrow Keys: Move the spaceship left or right.
--Spacebar: Fire bullets to attack alien invaders.
+- Arrow Keys: Move the spaceship left or right.
+- Spacebar: Fire bullets to attack alien invaders.
 
 ---
 
@@ -95,6 +95,7 @@ Make sure you have the following installed on your system:
 
 ## Project Structure
 
+```
 space-invaders/
 ├── public/
 │   └── index.html
@@ -119,6 +120,7 @@ space-invaders/
 ├── package.json
 ├── README.md
 └── package-lock.json
+```
 
 ---
 
