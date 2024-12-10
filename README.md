@@ -95,6 +95,7 @@ Make sure you have the following installed on your system:
 
 ## Project Structure
 
+```
 space-invaders/
 ├── public/
 │   └── index.html
@@ -119,6 +120,7 @@ space-invaders/
 ├── package.json
 ├── README.md
 └── package-lock.json
+```
 
 ---
 
